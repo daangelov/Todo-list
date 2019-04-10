@@ -1,0 +1,49 @@
+<?= $this->doctype() ?>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <?= $this->headTitle('ZF Skeleton Application')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <?= $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+
+    <!-- Le styles -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <?= $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'])
+        ->prependStylesheet($this->basePath('css/style.css'))
+        ->prependStylesheet($this->basePath('css/materialize.min.css'))
+    ?>
+
+</head>
+<body>
+<nav class="teal lighten-2" role="navigation">
+    <div class="nav-wrapper container">
+        <a id="logo-container" href="<?= $this->basePath() ?>" class="brand-logo">Todo-list</a>
+    </div>
+</nav>
+
+<main>
+    <div class="container">
+        <?= $this->content ?>
+    </div>
+</main>
+
+
+<footer class="page-footer teal lighten-2">
+    <div class="container">
+        <div class="row center-align">
+            © 2019 Dragomir Angelov
+        </div>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<?= $this->headScript()
+    ->prependFile($this->basePath('js/main.js'))
+    ->prependFile($this->basePath('js/materialize.min.js'))
+?>
+</body>
+</html>
