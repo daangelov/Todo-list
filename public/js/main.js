@@ -49,6 +49,12 @@ function addTask(task) {
     // Same as above: deleteButton.addEventListener('click', () => handleRemoveTask(newDeleteTaskAction));
     deleteButton.removeAttribute('data-action');
 
+    let checkbox = newTask.querySelector('input[type="checkbox"]');
+    let newUpdateTaskAction = checkbox.getAttribute('data-action').replace('tempTaskId', task.id);
+    checkbox.setAttribute('onclick', "handleUpdateTask(event, '" + newUpdateTaskAction + "')");
+    // Same as above: checkbox.addEventListener('click', () => handleUpdateTask(event, newUpdateTaskAction));
+    checkbox.removeAttribute('data-action');
+
     newTask.classList.remove('hide');
     document.getElementById('taskList').appendChild(newTask);
 }

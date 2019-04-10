@@ -19,7 +19,8 @@
                         <div class="row">
                             <div class="col s12">
                                 <label class="active">
-                                    <input type="checkbox" name="completed">
+                                    <input type="checkbox" name="completed"
+                                           data-action="<?= $this->url('home/update', ['id' => 'tempTaskId']); ?>">
                                     <span class="taskTitle"></span>
                                 </label>
                                 <button class="deleteTaskButton btn-small btn-floating right"
