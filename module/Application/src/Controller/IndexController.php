@@ -54,11 +54,14 @@ class IndexController extends AbstractActionController
     public function updateAction()
     {
         // TODO update task with id = $taskId
+        $taskId = $this->params()->fromRoute('id', '-');
+        $completed = rand() % 2;
 
         return new JsonModel([
             'status' => 1,
             'task' => [
-                'completed' => false
+                'id' => $taskId,
+                'completed' => $completed
             ],
         ]);
     }
@@ -79,10 +82,12 @@ class IndexController extends AbstractActionController
     public function deleteCompletedAction()
     {
         // TODO delete all tasks that are marked completed
+        return new JsonModel(['status' => 1]);
     }
 
     public function deleteAllAction()
     {
         // TODO delete all tasks
+        return new JsonModel(['status' => 1]);
     }
 }
