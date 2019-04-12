@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "901f0153135a5dfc378811eaec6ef26d",
+    "content-hash": "e896c600392a3ad741e74c4dba695c7f",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -3091,7 +3091,9 @@
                 "zf2"
             ],
             "time": "2019-02-19T17:40:15+00:00"
-        },
+        }
+    ],
+    "packages-dev": [
         {
             "name": "zfcampus/zf-development-mode",
             "version": "3.2.0",
@@ -3142,7 +3144,6 @@
             "time": "2018-05-07T15:44:42+00:00"
         }
     ],
-    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
