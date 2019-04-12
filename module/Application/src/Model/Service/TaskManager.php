@@ -57,7 +57,6 @@ class TaskManager
 
     /**
      * @param $task
-     * @throws ORMException
      * @throws Exception
      */
     public function deleteTask($task)
@@ -66,14 +65,15 @@ class TaskManager
         $this->entityManager->flush();
     }
 
-    public function deleteAllTasks()
+    /**
+     * @param $tasks
+     * @throws Exception
+     */
+    public function deleteMultipleTasks($tasks)
     {
-
+        foreach ($tasks as $task) {
+            $this->entityManager->remove($task);
+        }
+        $this->entityManager->flush();
     }
-
-    public function deleteCompletedTasks()
-    {
-
-    }
-
 }

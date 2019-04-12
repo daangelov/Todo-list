@@ -81,9 +81,8 @@ function removeTask(taskId) {
 function handleRemoveCompletedTasks(removeCompletedTasksAction) {
     fetch(removeCompletedTasksAction, {method: 'POST'})
         .then((response) => response.json())
-        .then(body => {
-            if (body.status === 1) removeCompletedTasks();
-        }).catch(error => console.log(error));
+        .then(body => body.status === 1 ? removeCompletedTasks() : alert(body.msg))
+        .catch(error => console.log(error));
 }
 
 function removeCompletedTasks() {
@@ -98,9 +97,8 @@ function handleRemoveAllTasks(removeAllTasksAction) {
 
     fetch(removeAllTasksAction, {method: 'POST'})
         .then((response) => response.json())
-        .then(body => {
-            if (body.status === 1) removeAllTasks();
-        }).catch(error => console.log(error));
+        .then(body => body.status === 1 ? removeAllTasks() : alert(body.msg))
+        .catch(error => console.log(error));
 }
 
 function removeAllTasks() {

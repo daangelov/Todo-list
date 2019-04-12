@@ -33,7 +33,9 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
-        $tasks = $this->entityManager->getRepository(Task::class)->findAll();
+        $tasks = $this->entityManager
+            ->getRepository(Task::class)
+            ->findAll();
 
         return new ViewModel(['tasks' => $tasks]);
     }
@@ -76,7 +78,10 @@ class IndexController extends AbstractActionController
             return new JsonModel(['status' => -1, 'msg' => 'Task id is not found']);
         }
 
-        $task = $this->entityManager->getRepository(Task::class)->find($taskId);
+        $task = $this->entityManager
+            ->getRepository(Task::class)
+            ->find($taskId);
+
         if ($task == null) {
             return new JsonModel(['status' => -1, 'msg' => 'Task not found!']);
         }
@@ -101,7 +106,10 @@ class IndexController extends AbstractActionController
             return new JsonModel(['status' => -1, 'msg' => 'Task id is not found']);
         }
 
-        $task = $this->entityManager->getRepository(Task::class)->find($taskId);
+        $task = $this->entityManager
+            ->getRepository(Task::class)
+            ->find($taskId);
+
         if ($task == null) {
             return new JsonModel(['status' => -1, 'msg' => 'Task not found!']);
         }
@@ -121,7 +129,16 @@ class IndexController extends AbstractActionController
             return $this->redirect()->toRoute('home');
         }
 
-        // TODO delete all tasks that are marked completed
+        $completedTasks = $this->entityManager
+            ->getRepository(Task::class)
+            ->findBy(['completed' => 1]);
+
+        try {
+            $this->taskManager->deleteMultipleTasks($completedTasks);
+        } catch (Exception $e) {
+            return new JsonModel(['status' => -1, 'msg' => 'System error!']);
+        }
+
         return new JsonModel(['status' => 1]);
     }
 
@@ -131,7 +148,16 @@ class IndexController extends AbstractActionController
             return $this->redirect()->toRoute('home');
         }
 
-        // TODO delete all tasks
+        $tasks = $this->entityManager
+            ->getRepository(Task::class)
+            ->findAll();
+
+        try {
+            $this->taskManager->deleteMultipleTasks($tasks);
+        } catch (Exception $e) {
+            return new JsonModel(['status' => -1, 'msg' => 'System error!']);
+        }
+
         return new JsonModel(['status' => 1]);
     }
 }
