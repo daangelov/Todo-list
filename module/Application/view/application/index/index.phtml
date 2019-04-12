@@ -33,18 +33,20 @@
                     <div id="taskList">
                         <!-- Insert tasks here -->
                         <?php foreach ($this->tasks as $task) : ?>
-                            <div id="<?= $task['id'] ?>" class="task">
+                            <?php /** @var Application\Model\Entity\Task $task */ ?>
+                            <div id="<?= $task->getId() ?>" class="task">
                                 <div class="row">
                                     <div class="col s12">
                                         <label class="active">
-                                            <input type="checkbox" name="completed" <?= $task['completed'] ? 'checked' : '' ?>
-                                                   onclick="handleUpdateTask(event, '<?= $this->url('home/update', ['id' => $task['id']]); ?>')">
-                                            <span class="taskTitle <?= $task['completed'] ? 'text-line-through' : '' ?>">
-                                                <?= $task['title'] ?>
+                                            <input type="checkbox" name="completed" <?= $task->getCompleted() ? 'checked' : '' ?>
+                                                   data-action="<?= $this->url('home/update', ['id' => $task->getId()]); ?>"
+                                                   onclick="handleUpdateTask(this, event)">
+                                            <span class="taskTitle <?= $task->getCompleted() ? 'text-line-through' : '' ?>">
+                                                <?= $task->getTitle() ?>
                                             </span>
                                         </label>
                                         <button class="deleteTaskButton btn-small btn-floating right"
-                                                onclick="handleRemoveTask('<?= $this->url('home/delete', ['id' => $task['id']]); ?>')">
+                                                onclick="handleRemoveTask('<?= $this->url('home/delete', ['id' => $task->getId()]); ?>')">
                                             <i class="material-icons">delete</i>
                                         </button>
                                     </div>

@@ -1,9 +1,14 @@
-function handleUpdateTask(event, updateTaskAction) {
+function handleUpdateTask(checkbox, event) {
     event.preventDefault();
-    fetch(updateTaskAction, {method: 'POST'})
+
+    let updateTaskAction = checkbox.getAttribute('data-action');
+    let data = new FormData();
+    data.append('completed', checkbox.checked ? 1 : 0);
+
+    fetch(updateTaskAction, {method: 'POST', body: data})
         .then(response => response.json())
-        .then(body => updateTask(body.task))
-        .catch(error => console.log(error));
+        .then(body => body.status === 1 ? updateTask(body.task) : alert(body.msg))
+        .catch(error => alert('Error'));
 }
 
 function updateTask(task) {
@@ -11,7 +16,7 @@ function updateTask(task) {
         checkbox = taskElement.querySelector('input[type="checkbox"]'),
         title = taskElement.querySelector('.taskTitle');
 
-    if (task.completed) {
+    if (task.completed === "1") {
         title.classList.add('text-line-through');
         checkbox.checked = true;
     } else {

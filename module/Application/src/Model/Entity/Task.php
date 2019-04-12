@@ -88,4 +88,15 @@ class Task
         $this->updatedOn = $updatedOn;
     }
 
+    public function getTaskProperties()
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'completed' => $this->completed,
+            'created_on' => $this->createdOn,
+            'updated_on' => $this->updatedOn
+        ];
+    }
+
 }

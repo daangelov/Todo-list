@@ -38,6 +38,10 @@ class IndexController extends AbstractActionController
 
     public function storeAction()
     {
+        if (!$this->getRequest()->isPost()) {
+            return $this->redirect()->toRoute('home');
+        }
+
         // TODO store new task in database
 
         $title = $this->params()->fromPost('title', '-');
@@ -53,8 +57,12 @@ class IndexController extends AbstractActionController
 
     public function updateAction()
     {
+        if (!$this->getRequest()->isPost()) {
+            return $this->redirect()->toRoute('home');
+        }
+
         $taskId = $this->params()->fromRoute('id', -1);
-        $taskCompleted = $this->params()->fromRoute('completed', false);
+        $taskCompleted = $this->params()->fromPost('completed', 0);
 
         if ($taskId < 0) {
             return new JsonModel(['status' => -1, 'msg' => 'Task id is not found']);
@@ -67,11 +75,15 @@ class IndexController extends AbstractActionController
 
         $this->taskManager->updateTask($task, $taskCompleted);
 
-        return new JsonModel(['status' => 1, 'task' => $task]);
+        return new JsonModel(['status' => 1, 'task' => $task->getTaskProperties()]);
     }
 
     public function deleteAction()
     {
+        if (!$this->getRequest()->isPost()) {
+            return $this->redirect()->toRoute('home');
+        }
+
         $taskId = $this->params()->fromRoute('id', -1);
         if ($taskId < 0) {
             return new JsonModel(['status' => -1, 'msg' => 'Task id is not found']);
@@ -89,12 +101,20 @@ class IndexController extends AbstractActionController
 
     public function deleteCompletedAction()
     {
+        if (!$this->getRequest()->isPost()) {
+            return $this->redirect()->toRoute('home');
+        }
+
         // TODO delete all tasks that are marked completed
         return new JsonModel(['status' => 1]);
     }
 
     public function deleteAllAction()
     {
+        if (!$this->getRequest()->isPost()) {
+            return $this->redirect()->toRoute('home');
+        }
+
         // TODO delete all tasks
         return new JsonModel(['status' => 1]);
     }

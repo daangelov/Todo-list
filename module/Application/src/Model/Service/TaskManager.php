@@ -38,7 +38,7 @@ class TaskManager
     /**
      * Update task (completed: true/false)
      * @param Task|object $task
-     * @param bool $completed
+     * @param boolean $completed
      */
     public function updateTask($task, $completed)
     {
@@ -54,4 +54,15 @@ class TaskManager
 
         $this->entityManager->flush();
     }
+
+    public function deleteAllTasks()
+    {
+
+    }
+
+    public function deleteCompletedTasks()
+    {
+
+    }
+
 }
