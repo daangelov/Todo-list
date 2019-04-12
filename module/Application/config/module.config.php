@@ -17,7 +17,7 @@ return [
             'home' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route'    => '/tasks',
+                    'route'    => '/',
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
                         'action'     => 'index',
@@ -30,7 +30,7 @@ return [
                     'create' => [
                         'type' => Literal::class,
                         'options' => [
-                            'route' => '/add',
+                            'route' => 'add',
                             'defaults' => [
                                 'action' => 'store',
                             ],
@@ -39,7 +39,10 @@ return [
                     'update' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/update/:id',
+                            'route' => 'update/:id',
+                            'constraints' => [
+                                'id' => '[0-9]+'
+                            ],
                             'defaults' => [
                                 'action' => 'update',
                             ],
@@ -48,7 +51,10 @@ return [
                     'delete' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/delete/:id',
+                            'route' => 'delete/:id',
+                            'constraints' => [
+                                'id' => '[0-9]+'
+                            ],
                             'defaults' => [
                                 'action' => 'delete',
                             ],
@@ -57,7 +63,7 @@ return [
                     'delete-completed' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/delete-completed',
+                            'route' => 'delete-completed',
                             'defaults' => [
                                 'action' => 'delete-completed',
                             ],
@@ -66,7 +72,7 @@ return [
                     'delete-all' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/delete-all',
+                            'route' => 'delete-all',
                             'defaults' => [
                                 'action' => 'delete-all',
                             ],
