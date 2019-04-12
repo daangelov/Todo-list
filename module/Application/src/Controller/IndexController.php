@@ -1,38 +1,38 @@
 <?php
-/**
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
 namespace Application\Controller;
 
+use Application\Model\Entity\Task;
+use Application\Model\Service\TaskManager;
+use Doctrine\ORM\EntityManager;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
+    /**
+     * Entity manager.
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * Task manager
+     * @var TaskManager
+     */
+    private $taskManager;
+
+    public function __construct($entityManager, $taskManager)
+    {
+        $this->entityManager = $entityManager;
+        $this->taskManager = $taskManager;
+    }
+
     public function indexAction()
     {
-        // TODO retrieve all tasks from database
-        $tasks = [
-            0 => [
-                'id' => 0,
-                'title' => 'Task 0',
-                'completed' => false,
-            ],
-            1 => [
-                'id' => 1,
-                'title' => 'Task 1',
-                'completed' => false,
-            ],
-            2 => [
-                'id' => 2,
-                'title' => 'Task 2',
-                'completed' => true,
-            ],
-        ];
+        $tasks = $this->entityManager->getRepository(Task::class)->findAll();
+
         return new ViewModel(['tasks' => $tasks]);
     }
 
@@ -53,30 +53,38 @@ class IndexController extends AbstractActionController
 
     public function updateAction()
     {
-        // TODO update task with id = $taskId
-        $taskId = $this->params()->fromRoute('id', '-');
-        $completed = rand() % 2;
+        $taskId = $this->params()->fromRoute('id', -1);
+        $taskCompleted = $this->params()->fromRoute('completed', false);
 
-        return new JsonModel([
-            'status' => 1,
-            'task' => [
-                'id' => $taskId,
-                'completed' => $completed
-            ],
-        ]);
+        if ($taskId < 0) {
+            return new JsonModel(['status' => -1, 'msg' => 'Task id is not found']);
+        }
+
+        $task = $this->entityManager->getRepository(Task::class)->find($taskId);
+        if ($task == null) {
+            return new JsonModel(['status' => -1, 'msg' => 'Task not found!']);
+        }
+
+        $this->taskManager->updateTask($task, $taskCompleted);
+
+        return new JsonModel(['status' => 1, 'task' => $task]);
     }
 
     public function deleteAction()
     {
-        // TODO delete task with id = $taskId
+        $taskId = $this->params()->fromRoute('id', -1);
+        if ($taskId < 0) {
+            return new JsonModel(['status' => -1, 'msg' => 'Task id is not found']);
+        }
 
-        $taskId = $this->params()->fromRoute('id', '-');
-        return new JsonModel([
-            'status' => 1,
-            'task' => [
-                'id' => $taskId
-            ],
-        ]);
+        $task = $this->entityManager->getRepository(Task::class)->find($taskId);
+        if ($task == null) {
+            return new JsonModel(['status' => -1, 'msg' => 'Task not found!']);
+        }
+
+        $this->taskManager->deleteTask($task);
+
+        return new JsonModel(['status' => 1, 'taskId' => $taskId]);
     }
 
     public function deleteCompletedAction()
