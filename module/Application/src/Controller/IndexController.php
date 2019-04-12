@@ -5,6 +5,8 @@ namespace Application\Controller;
 use Application\Model\Entity\Task;
 use Application\Model\Service\TaskManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
+use Exception;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
@@ -42,17 +44,23 @@ class IndexController extends AbstractActionController
             return $this->redirect()->toRoute('home');
         }
 
-        // TODO store new task in database
+        $title = $this->params()->fromPost('title', '');
+        if (!$title) {
+            return new JsonModel(['status' => -1, 'msg' => 'Please provide a task title']);
+        }
 
-        $title = $this->params()->fromPost('title', '-');
-        return new JsonModel([
-            'status' => 1,
-            'task' => [
-                'id' => rand(),
-                'title' => $title,
-                'completed' => false
-            ],
-        ]);
+        $data = [
+            'title' => $title,
+            'completed' => 0
+        ];
+
+        try {
+            $task = $this->taskManager->addTask($data);
+        } catch (Exception $e) {
+            return new JsonModel(['status' => -1, 'msg' => 'System error!']);
+        }
+
+        return new JsonModel(['status' => 1, 'task' => $task->getTaskProperties()]);
     }
 
     public function updateAction()
@@ -73,7 +81,11 @@ class IndexController extends AbstractActionController
             return new JsonModel(['status' => -1, 'msg' => 'Task not found!']);
         }
 
-        $this->taskManager->updateTask($task, $taskCompleted);
+        try {
+            $this->taskManager->updateTask($task, $taskCompleted);
+        } catch (Exception $e) {
+            return new JsonModel(['status' => -1, 'msg' => 'System error!']);
+        }
 
         return new JsonModel(['status' => 1, 'task' => $task->getTaskProperties()]);
     }
@@ -94,7 +106,11 @@ class IndexController extends AbstractActionController
             return new JsonModel(['status' => -1, 'msg' => 'Task not found!']);
         }
 
-        $this->taskManager->deleteTask($task);
+        try {
+            $this->taskManager->deleteTask($task);
+        } catch (Exception $e) {
+            return new JsonModel(['status' => -1, 'msg' => 'System error!']);
+        }
 
         return new JsonModel(['status' => 1, 'taskId' => $taskId]);
     }

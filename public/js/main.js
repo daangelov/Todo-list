@@ -37,6 +37,8 @@ function handleAddTask(event, form) {
             if (body.status === 1) {
                 addTask(body.task);
                 document.getElementById('title').value = '';
+            } else {
+                alert(body.msg);
             }
         }).catch(error => console.log(error));
 }
@@ -56,9 +58,9 @@ function addTask(task) {
 
     let checkbox = newTask.querySelector('input[type="checkbox"]');
     let newUpdateTaskAction = checkbox.getAttribute('data-action').replace('tempTaskId', task.id);
-    checkbox.setAttribute('onclick', "handleUpdateTask(event, '" + newUpdateTaskAction + "')");
+    checkbox.setAttribute('data-action', newUpdateTaskAction);
+    checkbox.setAttribute('onclick', "handleUpdateTask(this, event)");
     // Same as above: checkbox.addEventListener('click', () => handleUpdateTask(event, newUpdateTaskAction));
-    checkbox.removeAttribute('data-action');
 
     newTask.classList.remove('hide');
     document.getElementById('taskList').appendChild(newTask);
@@ -68,13 +70,12 @@ function handleRemoveTask(removeTaskAction) {
 
     fetch(removeTaskAction, {method: 'POST'})
         .then(response => response.json())
-        .then(body => {
-            if (body.status === 1) removeTask(body.task);
-        }).catch(error => console.log(error));
+        .then(body => body.status === 1 ? removeTask(body.taskId) : alert(body.msg))
+        .catch(error => console.log(error));
 }
 
-function removeTask(task) {
-    document.getElementById(task.id).remove();
+function removeTask(taskId) {
+    document.getElementById(taskId).remove();
 }
 
 function handleRemoveCompletedTasks(removeCompletedTasksAction) {

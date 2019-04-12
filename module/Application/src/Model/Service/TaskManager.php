@@ -4,6 +4,9 @@ namespace Application\Model\Service;
 
 use Application\Model\Entity\Task;
 use DateTime;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
 
 class TaskManager
 {
@@ -21,6 +24,8 @@ class TaskManager
     /**
      * Add new task
      * @param array $data
+     * @return Task
+     * @throws Exception
      */
     public function addTask($data)
     {
@@ -30,15 +35,17 @@ class TaskManager
         $task->setCreatedOn((new DateTime())->format('Y-m-d H:i:s'));
         $task->setUpdatedOn((new DateTime())->format('Y-m-d H:i:s'));
 
-        // $this->entityManager->persist($task);
-
+        $this->entityManager->persist($task);
         $this->entityManager->flush();
+
+        return $task;
     }
 
     /**
      * Update task (completed: true/false)
      * @param Task|object $task
      * @param boolean $completed
+     * @throws Exception
      */
     public function updateTask($task, $completed)
     {
@@ -48,10 +55,14 @@ class TaskManager
         $this->entityManager->flush();
     }
 
+    /**
+     * @param $task
+     * @throws ORMException
+     * @throws Exception
+     */
     public function deleteTask($task)
     {
         $this->entityManager->remove($task);
-
         $this->entityManager->flush();
     }
 
